@@ -52,5 +52,6 @@ $(document).ready(function() {
 			$(this).addClass("errorFeedback");
 		});
 	}
-	
+
+
 });

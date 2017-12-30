@@ -9,15 +9,14 @@ $(document).ready(function() {
 		case "Payment":
 		$( "#trDebit" ).prop( "disabled", true );
 		$( "#trCredit" ).prop( "disabled", false );
+		$('.debt').hide();
 		break;
 		case "Room Fee":
 		case "Foam Fee":
+		$('.debt').show();
 		$( "#trDebit" ).prop( "disabled", false );
 		$( "#trCredit" ).prop( "disabled", true );
-		break;
-		case  "Cancellation":
-		$( "#trDebit" ).prop( "disabled", false );
-		$( "#trCredit" ).prop( "disabled", false );
+
 		break;
 		default: break;
 	}
@@ -28,12 +27,14 @@ $(document).ready(function() {
 	switch(trDescVal) {
 		case "Payment":
 		document.getElementById("trDebit").value = "0.00";
+		$('.debt').hide();
 		$( "#trDebit" ).prop( "disabled", true );
 		$( "#trCredit" ).prop( "disabled", false );
 		break;
 		case "Room Fee":
 		case "Foam Fee":
 		document.getElementById("trCredit").value = "0.00";
+		$('.debt').show();
 		$( "#trDebit" ).prop( "disabled", false );
 		$( "#trCredit" ).prop( "disabled", true );
 		break;
@@ -47,7 +48,7 @@ $(document).ready(function() {
 	}
 	
 	});
-	
+
 });
 
 

@@ -35,8 +35,8 @@ include('../rules.php');
 	<table class="tableForm" style="margin-top:50px;display:;">
 			<tr><td><h3><center>ADDING OF CUSTOMER RECORDS</center></h3></td></tr>
 			<tr><td><a href="CustAdd.php"><div style="">Register customer</div></a></td></tr>
-			<tr><td><div><a href="EmpEdit.php"><div style="">Edit employee records</div></a></div></td></tr>
-			<tr><td><div><a href="EmpDelete.php"><div style="">Delete employee records</div></a></div></td></tr>
+			<tr><td><div><a href="EmpEdit.php"><div style="">Update Customer records</div></a></div></td></tr>
+			<tr><td><div><a href="CustBalanceConfirm.php"><div style="">Update All Customer Balances</div></a></div></td></tr>
 	</table>
 	<br/><p align="center" class="back2maintenance"><a href="../../maintenance.php">Back to the Maintenance Module</a></p>
 	</div>

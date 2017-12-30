@@ -92,6 +92,17 @@ id="fnameError">First Name is required</span>
 			  </select></td>
 			  <span class="errorFeedback errorSpan" id="trDescError">Description is required</span>
 
+			</tr >
+			<tr class="debt">
+			  	<td><label for="trDueDate">Due Date</label></td>
+			  	<td><input type="date" name="trDueDate" id="trDueDate" value="<?php echo date('Y-m-d',strtotime('+30 Days')); ?>"/></td>
+				<span class="errorFeedback errorSpan" id="trDueDateError">Credit is required</span>
+				<td>Daily <input type="checkbox" name="daily" id="daily"> </td>
+			</tr>
+			<tr class="debt">
+			  	<td><label for="trAllowance">Days Allowance</label></td>
+			  	<td><input type="number" name="trAllowance" id="trAllowance" maxlength="3" value="5"/></td>
+				<span class="errorFeedback errorSpan" id="trAllowanceError">Credit is required</span>
 			</tr>
 		  <tr>		
 				<td align="center" style="padding:5px;"><input type="reset" name="clear" id="clear" value="Clear Values"/></td>
@@ -129,8 +140,17 @@ id="fnameError">First Name is required</span>
 </body>
 
 <script>
+$(document).ready(function() {
+	$("#daily").change( function() {		
+		if(this.checked) {
+			document.getElementById('trDueDate').value = "<?php echo date('Y-m-d',strtotime('+1 Days')); ?>";
+    	}
+    	else {
+    		document.getElementById('trDueDate').value = "<?php echo date('Y-m-d',strtotime('+30 Days')); ?>";
+    	}
 
-
+	});
+});
 </script>
 
 </html>

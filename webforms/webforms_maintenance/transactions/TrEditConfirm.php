@@ -103,7 +103,7 @@ if ($result = $mysqli->query($query1)) {
 	$newBalance = $mysqli->real_escape_string($newBalance);
 }
 
-$trStatus = "Cancelled";
+$trStatus = "OK";
 $trStatus = $mysqli->real_escape_string($trStatus);
 $desc = "Cancellation";
 $desc = $mysqli->real_escape_string($desc);
@@ -111,18 +111,21 @@ $ref = $oldTrID;
 $ref =  $mysqli->real_escape_string($ref);
 $query2 = "INSERT INTO transactions (TrCustID,TrDebit,TrCredit,TrDescription,TrBalance,TrStatus,TrReference) " ." VALUES ('{$custID}','{$oldCredit}','{$oldDebit}','{$desc}','{$newBalance}','{$trStatus}','{$ref}')";
 $query3 = "UPDATE customers SET CBalance = '{$newBalance}' WHERE CustomerNo = '{$custID}'";
+$query4 = "UPDATE transactions SET TrStatus = 'Cancelled' WHERE TransactionID = '{$oldTrID}'";
 if(!$mysqli->query($query3)) {
 	error_log("Problem inserting {$query3}");
 }
-
+if(!$mysqli->query($query4)) {
+	error_log("Problem inserting {$query4}");
+}
 
 if ($mysqli->query($query2)) {
 error_log("Edited a new transaction");
-
 return true;
 } else {
 error_log("Problem inserting {$query2}");
 return false;
 }
+
 } //end function addTransaction
 ?>
