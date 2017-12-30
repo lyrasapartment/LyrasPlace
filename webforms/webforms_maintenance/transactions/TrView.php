@@ -77,7 +77,7 @@ id="fnameError">First Name is required</span>
 				<small>Date To</small>
 			</td>
 			<td>
-				<input type="date" name="trDateTo" id="trDateTo" value="<?php echo date('Y-m-d'); ?>"/>
+				<input type="date" name="trDateTo" id="trDateTo" value="<?php echo date('Y-m-d',strtotime('+1 Days')); ?>"/>
 			</td>
 		
 			<td>
@@ -97,6 +97,7 @@ id="fnameError">First Name is required</span>
 				<th>Date</th>
 				<th>Balance</th>
 				<th>Status</th>
+				<th>Reference #</th>
 			</tr>
 		</thead>
 		<tbody data-bind="foreach: displayedTransactions">
@@ -125,6 +126,9 @@ id="fnameError">First Name is required</span>
 			</td>
 			<td>
 				<span data-bind="text:TrStatus"></span>
+			</td>
+			<td>
+				<span data-bind="text:TrReference"></span>
 			</td>
 		</tr>
 		</tbody>
@@ -161,6 +165,24 @@ id="fnameError">First Name is required</span>
 			</td>
 		</tr>
 
+	</table>
+	<table style="margin: 0 auto;">
+		<form id="trEditForm" name="trEditForm" method="POST" action="TrEdit.php">
+			<tr>
+				<td>
+					Transaction ID : 
+					<input type="text" name="TransactionID" id="TransactionID" maxlength="25" style="width:100px;">
+				</td>
+				<td>
+					<input type="submit" name="submit" id="submit" value="Cancel Transaction">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<span class="errorFeedback errorSpan" id="TransactionIDError">Transaction ID is required</span>
+				</td>
+			</tr>
+		</form>
 	</table>
 	
 	</div>

@@ -69,6 +69,21 @@ if (!preg_match('/^[\w .]+$/',$_POST['trDesc'])) {
 $_SESSION['error'][] = "Description must be letters and numbers only. : " . $_POST['trDesc'];
 }
 
+function is_valid_desc($str) {
+	switch($str) {
+		case "Foam Fee":
+		case "Payment":
+		case "Room Fee":
+		//case "Cancellation":
+		return true;
+		break;
+		default: return false;break;
+	}
+}
+
+if(!is_valid_desc($_POST['trDesc'])) {
+$_SESSION['error'][] = "Description must valid : " . $_POST['trDesc'];
+}
 
 //final disposition
 if (count($_SESSION['error']) > 0) {
@@ -139,8 +154,8 @@ $newBalance = $mysqli->real_escape_string($newBalance);
 }
 
 $trStatus = "OK";
-$trStatus $mysqli->real_escape_string($trStatus);
-$query2 = "INSERT INTO transactions (TrCustID,TrCreateDate,TrDebit,TrCredit,TrDescription,TrBalance,TrStatus) " ." VALUES ('{$custID}',NOW(),'{$debit}','{$credit}','{$desc}','{$newBalance}','{$trStatus}')";
+$trStatus = $mysqli->real_escape_string($trStatus);
+$query2 = "INSERT INTO transactions (TrCustID,TrDebit,TrCredit,TrDescription,TrBalance,TrStatus) " ." VALUES ('{$custID}','{$debit}','{$credit}','{$desc}','{$newBalance}','{$trStatus}')";
 $query3 = "UPDATE customers SET CBalance = '{$newBalance}' WHERE CustomerNo = '{$custID}'";
 if(!$mysqli->query($query3)) {
 	error_log("Problem inserting {$query3}");

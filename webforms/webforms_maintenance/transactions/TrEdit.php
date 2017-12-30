@@ -3,8 +3,6 @@
 <html style="background: url('../../../includes/img/bg/bg2.jpg') no-repeat center center fixed;background-size: cover;">
 <head>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-<script type="text/javascript" src="../jquery/Transactions-Edit-Error.js.js"></script>
-<script type="text/javascript" src="../jquery/Transactions_Ajax.js"></script>
 <link rel="stylesheet" type="text/css" href="../../../includes/form.css">
 <link rel="stylesheet" type="text/css" href="../../../includes/footer.css">
 <link rel="stylesheet" type="text/css" href="../../../includes/align.css">
@@ -16,22 +14,34 @@
 include '../header2.php'; 
 include('../rules.php');
 include_once '../connect.php';
-$dc = $_POST['TransactionID'];
-if($con) {
+unset($_POST['submit']);
 
-	$safeDC = $con->real_escape_string($dc);
-	$sql = "SELECT * from transactions t,customers c WHERE t.TrCustID = c.CustomerNo AND t.TransactionID = '{$safeDC}'";
-	if($QueryResult = mysqli_query($con,$sql)){
-		$row = $QueryResult->fetch_assoc();
+if(!is_numeric($_POST['TransactionID'])) {
+	echo "<br><center>Access denied. Transaction record is invalid.</center>";
+	echo "<meta http-equiv=\"refresh\" content=\"3; url=TrView.php\">";
+}
+else {
+	$dc = $_POST['TransactionID'];
+	if($con) {
+
+		$safeDC = $con->real_escape_string($dc);
+		$sql = "SELECT * from transactions t,customers c WHERE t.TrCustID = c.CustomerNo AND t.TransactionID = '{$safeDC}'";
+		if($QueryResult = mysqli_query($con,$sql)){
+			$row = $QueryResult->fetch_assoc();
+		}
+		$defaultTrID = $row['TransactionID'];
+		$defaultCustomer = $row['TrCustID'];
+		$defaultCustomerName = "" . $row['CFirstName'] . ' ' . $row['CLastName'];
+		$defaultDebit = $row['TrDebit'];
+		$defaultCredit = $row['TrCredit'];
+		$defaultDesc = $row['TrDescription'];
+		$defaultStatus = $row['TrStatus'];
+		if($defaultStatus == "Cancelled") {
+			echo "<br><center>Access denied. Unable to edit cancelled transactions.</center>";
+			echo "<meta http-equiv=\"refresh\" content=\"3; url=TrView.php\">";
+		}
+
 	}
-	$defaultTrID = $row['TransactionID'];
-	$defaultCustomer = $row['TrCustID'];
-	$defaultCustomerName = "" . $row['CFirstName'] . ' ' . $row['CLastName'];
-	$defaultDebit = $row['TrDebit'];
-	$defaultCredit = $row['TrCredit'];
-	$defaultDesc = $row['TrDescription'];
-	$defaultStatus = $row['TrStatus'];
-
 }
 
 
@@ -41,7 +51,7 @@ if($con) {
 	if(is_null($user)) {
 	 $user = new User;
 	}
-	if($user->isAdmin && $defaultStatus!="Cancelled") {
+	if($user->isLoggedIn && is_numeric($_POST['TransactionID']) && $defaultStatus!="Cancelled") {
 		//echo 'Registration of accounts';	
 		$hideform = false;	
 	}
@@ -49,11 +59,6 @@ if($con) {
 	$hideform = true;
 	}
 
-
-	if ($defaultStatus=="Cancelled") {
-			echo "<br><center>Access denied. You cannot edit cancelled transactions.</center>";
-			echo "<meta http-equiv=\"refresh\" content=\"3; url=../../index.php\">";
-	}
 ?>
 
 <div id="div-ctr"><br/>
@@ -79,8 +84,8 @@ id="fnameError">First Name is required</span>
 	<div id="hide" style="display:none;">
 		
 		<center>
-		<table style="border:1px solid black;auto;" class="tableForm">
-		<form id="trAddForm" name="trAddForm" method="POST" action="TrAddConfirm.php">
+		<table style="border:1px solid black;" class="tableForm">
+		<form id="trEditForm" name="trEditForm" method="POST" action="TrEditConfirm.php">
 			<legend><h3>EDIT TRANSACTIONS</h3></legend>
 			<tr>
 				<td>Transaction ID : 
@@ -94,47 +99,39 @@ id="fnameError">First Name is required</span>
 				<td><span><?php echo $defaultCustomerName; ?></span></td>
 			</tr>
 			
-
 			<tr>
-			  	<td><label for="trDebit">Debit</label></td>
-			  	<td><input type="text" name="trDebit" id="trDebit" maxlength="11" value="<?php echo $defaultDebit; ?>"/></td>
-				<span class="errorFeedback errorSpan" id="trDebitError">Debit is required</span>
+				<td>Debit : </td>
+				<td><span><?php echo $defaultDebit; ?></span></td>
 			</tr>
 			<tr>
-			  	<td><label for="trCredit">Credit</label></td>
-			  	<td><input type="text" name="trCredit" id="trCredit" maxlength="11" value="<?php echo $defaultCredit; ?>"/></td>
-				<span class="errorFeedback errorSpan" id="trCreditError">Credit is required</span>
+				<td>Credit : </td>
+				<td><span><?php echo $defaultCredit; ?></span></td>
 			</tr>
 			<tr>
-			  	<td><label for="trDesc">Description</label></td>
-			  	<td><select id="trDesc" name="trDesc">
-					<option value="Payment">Payment</option>
-					<option value="Room Fee">Room fee</option>
-					<option value="Foam Fee">Foam fee</option>
-			  </select></td>
-			  <span class="errorFeedback errorSpan" id="trDescError">Description is required</span>
-
+				<td>Description : </td>
+				<td><span><?php echo $defaultDesc; ?></span></td>
 			</tr>
 
 			<tr>
 			  	<td><label for="trStatus">Status</label></td>
 			  	<td><select id="trStatus" name="trStatus">
-					<option value="OK" selected >OK</option>
-					<option value="Cancelled">Cancelled</option>
+					<option value="Cancelled" selected>Cancelled</option>
 			  </select></td>
 			  <span class="errorFeedback errorSpan" id="trStatusError">Status is required</span>
 
 			</tr>
-		  <tr>		
-				<td align="center" style="padding:5px;"><input type="reset" name="clear" id="clear" value="Clear Values"/></td>
-				<td align="center"style="padding:5px;"><input type="submit" name="submit" id="submit" value="Edit This Record"/></td>
-		  </tr>	
+		 
 		  <tr>
 		  	<td>
-		  		<input type="hidden" name="defaultCustomer" id="defaultCustomer" value=<?php echo "\"$defaultCustomer\""  ?> style="display:none;"/>
-				<input type="hidden" name="defaultTrID" id="defaultTrID" value=<?php echo "\"$defaultTrID\""  ?> style="display:none;"/>
+		  		<input type="hidden" name="trStatus" id="trStatus" value="<?php echo $defaultStatus; ?>" style="display:none;"/>
+		  		<input type="hidden" name="defaultCustomer" id="defaultCustomer" value="<?php echo $defaultCustomer; ?>" style="display:none;"/>
+				<input type="hidden" name="defaultTrID" id="defaultTrID" value="<?php echo $defaultTrID; ?>" style="display:none;"/>
 		  	</td>
 		  </tr>
+		   <tr>		
+				<td align="center" style="padding:5px;"><input type="reset" name="clear" id="clear" value="Clear Values"/></td>
+				<td align="center"style="padding:5px;"><input type="submit" name="submit" id="submit" value="Cancel This Record"/></td>
+		  </tr>	
 					  
   </form>
   </table>
@@ -167,27 +164,7 @@ id="fnameError">First Name is required</span>
 </body>
 
 <script>
-	$(document).ready(function() {
-		var x = "<?php echo $defaultDesc ?>";
-		switch(x) {
-			case "Payment": x = 0;
-			$( "#trDebit" ).prop( "disabled", true );
-			$( "#trCredit" ).prop( "disabled", false );
-			break;
-			case "Room Fee": x = 1;
-			$( "#trDebit" ).prop( "disabled", false );
-			$( "#trCredit" ).prop( "disabled", true );
-			break;
-			case "Foam Fee":
-			$( "#trDebit" ).prop( "disabled", false );
-			$( "#trCredit" ).prop( "disabled", true );
-			 x = 2;break;
-			default: break;
-		}
 
-		var e = document.getElementById("trDesc");
-		e.selectedIndex = x;
-	});
 </script>
 
 </html>

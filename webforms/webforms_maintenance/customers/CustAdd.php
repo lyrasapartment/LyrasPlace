@@ -100,12 +100,7 @@ print $error . "<br />\n";
 <tr>
 <td colspan="2" align="right" ><input style="margin-right:20%;"type="submit" id="submit" name="submit" value="submit" onclick="return confirm('Are you sure?')"/></td>
 </tr>
-<tr>
-	<td colspan="2"><label for="activeaccount"><font style="font-size:12px;">Already have an account?</font></label>
-	<label for="login">
-	<a href="../../login.php" class="link-text footer-nav"><small>Click here to login</small></a></td>
-</label>
-</tr>
+
 
 </form>
 </table>

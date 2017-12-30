@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	$("#trAddForm").submit(function(e) {
+	$("#trEditForm").submit(function(e) {
 		removeFeedback();
 		var errors = validateForm1();
 		if(errors == "") {
@@ -15,22 +15,9 @@ $(document).ready(function() {
 		var errorFields = new Array();
 		
 		//Check required fields have something in them
-		if ($('#trCustId').val() == "") {
-			errorFields.push('trCustId');
+		if ($('#TransactionID').val() == "") {
+			errorFields.push('TransactionID');
 		}
-		if ($('#trDebit').val() == "") {
-			errorFields.push('trDebit');
-		}
-
-		if ($('#trCredit').val() == "") {
-			errorFields.push('trCredit');
-		}
-		
-		if ($('#trDesc').val() == "") {
-			errorFields.push('trDesc');
-		}
-		
-		
 		
 		return errorFields;
 	} //end function validateForm
@@ -40,7 +27,7 @@ $(document).ready(function() {
 			$("#"+incomingErrors[i]).addClass("errorClass");
 			$("#"+incomingErrors[i]+"Error").removeClass("errorFeedback");
 		}
-		$("#errorDiv").html("Errors encountered");
+		//$("#errorDiv").html("Errors encountered");
 	}
 	
 	function removeFeedback() {

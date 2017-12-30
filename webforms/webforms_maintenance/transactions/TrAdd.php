@@ -89,7 +89,6 @@ id="fnameError">First Name is required</span>
 					<option value="Payment" selected>Payment</option>
 					<option value="Room Fee">Room fee</option>
 					<option value="Foam Fee">Foam fee</option>
-					<option value="Cancellation">Cancellation</option>
 			  </select></td>
 			  <span class="errorFeedback errorSpan" id="trDescError">Description is required</span>
 

@@ -4,7 +4,7 @@ require_once("../../../includes/unused/dbstuff.inc");
 $user = new User;
 //prevent access if they haven't submitted the form.
 if (!isset($_POST['submit'])) {
-die(header("Location: TrAddConfirm.php"));
+die(header("Location: TrEditConfirm.php"));
 }
 
 $_SESSION['formAttempt'] = true;
@@ -14,12 +14,11 @@ unset($_SESSION['error']);
 
 
 $_SESSION['error'] = array();
-$required = array("trDesc,trStatus");
+$required = array("trStatus");
 //Check required fields
 foreach ($required as $requiredField) {
 if (!isset($_POST[$requiredField]) || $_POST[$requiredField]== "") {
 	switch($requiredField) {
-		case "trDesc": $requiredField = "Description";break;
 		case "trStatus": $requiredField = "Status";break;
 		default:break;
 	}
@@ -34,15 +33,6 @@ $_SESSION['error'][] = "Last Name must be letters and numbers only.";
 
 //$_POST['trCredit'] = floatval($_POST['trCredit']);
 
-function is_valid_payment($payment) {
-	if(is_numeric($payment)) {
-		return true;
-	}
-	else {
-		return false;
-	}
-}
-
 function is_valid_status($str) {
 	switch ($str) {
 		case "OK":
@@ -51,30 +41,6 @@ function is_valid_status($str) {
 		
 		default: return false;break;
 	}
-}
-
-
-if (isset($_POST['trDebit']) && $_POST['trDebit'] != "") {
-	if(!is_valid_payment($_POST['trDebit']))  {
-		$_SESSION['error'][] = "Debit must be numbers only. : " . $_POST['trCredit'];
-	}
-	else {
-		$_POST['trDebit'] = floatval($_POST['trDebit']);
-	}
-}
-
-
-if (isset($_POST['trCredit']) && $_POST['trCredit'] != "") {
-	if(!is_valid_payment($_POST['trCredit']))  {
-		$_SESSION['error'][] = "Credit must be numbers only. : " . $_POST['trCredit'];
-	}
-	else {
-		$_POST['trCredit'] = floatval($_POST['trCredit']);
-	}
-}
-
-if (!preg_match('/^[\w .]+$/',$_POST['trDesc'])) {
-$_SESSION['error'][] = "Description must be letters and numbers only. : " . $_POST['trDesc'];
 }
 
 if (!preg_match('/^[\w .]+$/',$_POST['trStatus'])) {
@@ -94,7 +60,7 @@ if (count($_SESSION['error']) > 0) {
 }
 else {
 	if(!is_null($user) && $user->isAdmin) {
-		if(addTransaction($_POST)) {
+		if(deleteTransaction($_POST)) {
 		unset($_SESSION['formAttempt']);
 		die(header("Location: TrEditConfirmSuccess.php"));
 		} 
@@ -111,14 +77,13 @@ else {
 	}
 }
 
-function addTransaction($userData) {
+function deleteTransaction($userData) {
 	$mysqli = new mysqli(DBHOST,DBUSER,DBPASS,DB);
 	if ($mysqli->connect_errno) {
 	error_log("Cannot connect to MySQL: " . $mysqli->connect_error);
 	return false;
 	}
 $custID = $mysqli->real_escape_string($_POST['defaultCustomer']);
-$status = $mysqli->real_escape_string($_POST['trStatus']);
 
 if (isset($_POST['defaultTrID'])) { 
 $oldTrID = $mysqli->real_escape_string($_POST['defaultTrID']);
@@ -127,43 +92,24 @@ $findResult = $mysqli->query($oldTrSql);
 $findRow = $findResult->fetch_assoc();
 $oldDebit = $findRow['TrDebit'];
 $oldCredit = $findRow['TrCredit'];
-$oldCBalance = $findRow['TrBalance'];
-$oldCBalance = -$oldDebit + $oldCredit;
 }
 
-
-if (isset($_POST['trDebit'])) {
-$debit = $mysqli->real_escape_string($_POST['trDebit']);
-} else {
-$debit = 0.00;
-}
-
-if (isset($_POST['trCredit'])) {
-$credit = $mysqli->real_escape_string($_POST['trCredit']);
-} else {
-$credit = 0.00;
-}
-
-
-if (isset($_POST['trDesc'])) {
-$desc = $mysqli->real_escape_string($_POST['trDesc']);
-} else {
-$desc = "";
-}
-$newBalance = 0;
 
 $query1 = "SELECT CBalance FROM customers WHERE CustomerNo = '{$custID}'";
 if ($result = $mysqli->query($query1)) {
 	$row = $result->fetch_assoc();
-	$newBalance = $oldCBalance + $debit - $credit;
-	if($status=="Cancelled") {
-		$newBalance = $oldCBalance;
-	}
-$newBalance = $mysqli->real_escape_string($newBalance);
+	$currentBalance = $row['CBalance'];
+	$newBalance = $currentBalance -$oldDebit + $oldCredit;
+	$newBalance = $mysqli->real_escape_string($newBalance);
 }
-$trStatus = $mysqli->real_escape_string($status);
 
-$query2 = "UPDATE transactions SET TrDebit = '{$debit}',TrCredit = '{$credit}',TrDescription = '{$desc}', TrBalance = '{$newBalance}',TrStatus = '{$trStatus}' WHERE TransactionID = '{$oldTrID}'";
+$trStatus = "Cancelled";
+$trStatus = $mysqli->real_escape_string($trStatus);
+$desc = "Cancellation";
+$desc = $mysqli->real_escape_string($desc);
+$ref = $oldTrID;
+$ref =  $mysqli->real_escape_string($ref);
+$query2 = "INSERT INTO transactions (TrCustID,TrDebit,TrCredit,TrDescription,TrBalance,TrStatus,TrReference) " ." VALUES ('{$custID}','{$oldCredit}','{$oldDebit}','{$desc}','{$newBalance}','{$trStatus}','{$ref}')";
 $query3 = "UPDATE customers SET CBalance = '{$newBalance}' WHERE CustomerNo = '{$custID}'";
 if(!$mysqli->query($query3)) {
 	error_log("Problem inserting {$query3}");

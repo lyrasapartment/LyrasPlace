@@ -3,7 +3,6 @@
 <html style="background: url('../../../includes/img/bg/bg2.jpg') no-repeat center center fixed;background-size: cover;">
 <head>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-<script type="text/javascript" src="../jquery/TrAdd_Ajax.js"></script>
 <link rel="stylesheet" type="text/css" href="../../../includes/form.css">
 <link rel="stylesheet" type="text/css" href="../../../includes/footer.css">
 <link rel="stylesheet" type="text/css" href="../../../includes/align.css">
@@ -25,9 +24,9 @@ id="fnameError">First Name is required</span>
 !-->
 
 	<center>
-	<h3>Edited a transaction</h3>
+	<h3>Cancelled a transaction</h3>
 	</center>	
-  <br/><p align="center"><a href="TrAdd.php">Add another transaction</a></p>
+  <br/><p align="center"><a href="TrView.php">Back to view transactions</a></p>
 		<br /><br />
 
 		
