@@ -1,0 +1,155 @@
+body, html {
+font-family: Arial;
+height:100%;
+}
+
+* {
+	margin:0;
+}
+
+form fieldset {
+display: inline-block;
+border-radius: 5px;
+background: rgba(0, 0, 0, 0.2);
+}
+
+.pageControls a {
+	text-decoration: none;
+	color: black;
+}
+
+.pageButtons {
+	text-align: center;
+	border: 1px solid black;
+	display: table-cell;
+	width: 15px;
+	height: 15px;
+	background: rgba(0, 0, 0, 0.2);
+}
+.pageButtons:hover {
+	background: rgba(255, 0, 0, 0.3);
+}
+
+.tableForm {
+	border-radius: 5px;
+	background: rgba(0, 0, 0, 0.2);
+	border:1px solid black;
+	padding:15px;
+	margin:0 auto;
+}
+
+.tableControls {
+	position: absolute;
+	bottom:75px;
+    left: 50%; /* position the left edge of the element at the middle of the parent */
+    transform: translate(-50%);
+}
+
+.table-responsive {height:180px;}
+
+.trSearchTransactionsTableHeading td{
+	text-align:center;
+}
+
+.trSearchTransactionsTable td {
+border:1px solid silver;
+}
+
+.trSearchTransactionsTable thead {
+text-align:left;
+}
+
+.trSearchTransactionsTable {
+	width:1000px;
+	border-radius: 5px;
+	background: rgba(0, 0, 0, 0.2);
+	border:1px solid black;
+	margin:0 auto;
+	margin-top: 15px;
+}
+
+.back2maintenance {
+	position:absolute;
+	bottom:50px;
+	margin-left: auto;
+	margin-right: auto;
+	left: 0;
+	right: 0;;
+}
+
+
+.tableDesign {
+	border-radius: 5px;
+	background: rgba(0, 0, 0, 0.2);
+	border:1px solid black;
+	padding:15px;
+}
+
+.radioButton {
+float: none;
+display: inline;
+margin-right: 0.1em;
+width: 2em;
+}
+form label {
+width: 10em;
+margin-right: 1em;
+
+text-align: left;
+display: inline-block;
+}
+form input {
+
+}
+
+
+#submit:hover, #clear:hover{
+	background: rgba(255, 0, 0, 0.3);
+}
+
+#searchButton:hover {
+	background: rgba(255, 0, 0, 0.3);
+}
+
+
+.errorClass {
+color: red;
+}
+
+#errorDiv {
+color: red;
+position:absolute;
+top:200px;
+left:100px;
+
+}
+.errorFeedback {
+visibility: hidden;
+}
+.phoneTypeError {
+margin-left: 1.2em;
+padding: 0.1em;
+background-color: #CC6666;
+}
+
+
+input, select, textarea {
+    border: 1px solid rgba(0, 0, 0, 0.5);
+	margin-bottom:2px;
+    background: rgba(0, 0, 0, 0.2);
+    color: #000;
+    font-family: "Times New Roman", Times, serif;
+    cursor: pointer;  
+	border-radius:5px;
+}
+
+select option {
+
+    background: rgba(0, 0, 0, 0.2);
+    color: #000;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+}
+
+div {
+	padding:0;
+}

@@ -1,0 +1,19 @@
+#div-ctr {
+	width:auto;
+	margin: 0 auto;
+	color: #222;
+}
+
+.div1 {
+
+}
+
+.div2 {
+	min-height:600px;
+	margin:0 auto;
+	
+}
+
+.div3 {
+	background: rgba(0, 0, 0, 0.8);
+}
